@@ -4,8 +4,9 @@ import matplotlib.cm as cm
 import cv2
 
 TOTAL_KERNEL = np.array([(1, 1, 1), (1, 1, 1), (1, 1, 1)], dtype=float)
-ROW_KERNEL = np.array([(-1, -1 , -1), (0, 0, 0), (1, 1, 1)], dtype=float)
+ROW_KERNEL = np.array([(-1, -1, -1), (0, 0, 0), (1, 1, 1)], dtype=float)
 COL_KERNEL = np.array([(-1, 0, 1), (-1, 0, 1), (-1, 0, 1)], dtype=float)
+
 
 def grayscale_image(image, out=None):
     result = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY).astype(float, copy=False)
@@ -14,6 +15,7 @@ def grayscale_image(image, out=None):
     out[:] = result
     return out
 
+
 def find_peaks(image, thresh=20, size=(3, 3), out=None):
     result = (image == nd.maximum_filter(image, size=size)) & (image >= thresh)
     if out is None:
@@ -21,10 +23,12 @@ def find_peaks(image, thresh=20, size=(3, 3), out=None):
     out[:] = result
     return out
 
+
 def divide(x, y, out=None):
     if out is None:
         return np.divide(x, y)
     return np.divide(x, y, out=out)
+
 
 def apply_peaks(image, mask, out=None):
     if out is None:
@@ -36,16 +40,20 @@ def apply_peaks(image, mask, out=None):
         out[~mask] = 0
         return out
 
+
 def condense(image, size=(10, 10), out=None):
     return nd.maximum_filter(image, size=size, output=out)
 
+
 def convolve(image, kernel, out=None):
     return nd.convolve(image.astype(float), kernel, output=out)
+
 
 def subtract(x, y, out=None):
     if out is None:
         return np.subtract(x, y)
     return np.subtract(x, y, out=out)
+
 
 def apply_cmap(image, cmap=cm.jet, out=None):
     result = cm.jet(image, bytes=True)
@@ -53,6 +61,7 @@ def apply_cmap(image, cmap=cm.jet, out=None):
         return result
     out[:] = result
     return out
+
 
 def join(image1, image2, out=None):
     if out is None:

@@ -6,7 +6,9 @@ import numpy as np
 from .rwstate import RWStateLockedData
 from .lib import *
 
+
 class SchlierenPipeline(object):
+
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -40,6 +42,7 @@ class SchlierenPipeline(object):
             output = join(rcmap, ccmap)
             self.dst.write(output)
 
+
 def test_and_set(test, src, out=None, fn=None):
     if test.get():
         return
@@ -50,19 +53,25 @@ def test_and_set(test, src, out=None, fn=None):
         result = fn(src, out=out)
     test.set(result is not None)
 
+
 class SharedValue(object):
+
     def __init__(self, init_val):
         self.val = init_val
+
     def set(self, new_val):
         self.val = new_val
+
     def get(self):
         return self.val
 
+
 class PreallocSchlierenPipeline(object):
+
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
-        
+
         self.peaks_test = SharedValue(False)
         self.rcent0_test = SharedValue(False)
         self.ccent0_test = SharedValue(False)
@@ -84,9 +93,9 @@ class PreallocSchlierenPipeline(object):
         self.cpeaks = np.zeros(frame_shape[:2], dtype=float)
         self.rcond = np.zeros(frame_shape[:2], dtype=float)
         self.ccond = np.zeros(frame_shape[:2], dtype=float)
-        self.rcmap = np.zeros(frame_shape[:2]+(4,), dtype='uint8')
-        self.ccmap = np.zeros(frame_shape[:2]+(4,), dtype='uint8')
-        self.output = np.zeros((frame_shape[0], 2*frame_shape[1], 4), dtype='uint8')
+        self.rcmap = np.zeros(frame_shape[:2] + (4,), dtype='uint8')
+        self.ccmap = np.zeros(frame_shape[:2] + (4,), dtype='uint8')
+        self.output = np.zeros((frame_shape[0], 2 * frame_shape[1], 4), dtype='uint8')
 
     def run(self):
         while True:
