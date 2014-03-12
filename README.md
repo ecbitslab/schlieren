@@ -3,7 +3,7 @@
 Important prerequisites that should be installed in advance:
 * Numpy and Scipy
   * Both source and binary distributions available for various platforms.
-  * The Anaconda distribution is a good 'just works' option.
+  * The [Anaconda](http://continuum.io/downloads) distribution is a good 'just works' option.
 * OpenCV
   * Used for its mulitplatform support for video capture.
   * Tends to be difficult to install from source; binary distributions recommended.
