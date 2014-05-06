@@ -56,12 +56,19 @@ def subtract(x, y, out=None):
 
 
 def apply_cmap(image, cmap=cm.jet, out=None):
-    result = cm.jet(image, bytes=True)
+    result = cmap(image, bytes=True)
     if out is None:
         return result
     out[:] = result
     return out
 
+def join2(image1, image2, out=None):
+    if out is None:
+        return np.hstack([image1, image2])
+    else:
+        out[:, :image1.shape[1]] = image1
+        out[:, image2.shape[1]:] = image2
+        return out
 
 def join(image1, image2, out=None):
     if out is None:

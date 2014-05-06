@@ -152,7 +152,7 @@ class SharedmemSchlierenPipeline(object):
                          self.rcmap,
                          self.ccmap,
                          out=self.output)  # 296 fps
-        self.make_worker(self.dst.write, self.output)  # 26k fps
+        #self.make_worker(self.dst.write, self.output)  # 26k fps
         self.join_all()
 
     def worker_loop(self, _func, *args, **dargs):

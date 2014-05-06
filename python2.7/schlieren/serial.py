@@ -93,14 +93,15 @@ class PreallocSchlierenPipeline(object):
         self.cpeaks = np.zeros(frame_shape[:2], dtype=float)
         self.rcond = np.zeros(frame_shape[:2], dtype=float)
         self.ccond = np.zeros(frame_shape[:2], dtype=float)
-        self.rcmap = np.zeros(frame_shape[:2] + (4,), dtype='uint8')
-        self.ccmap = np.zeros(frame_shape[:2] + (4,), dtype='uint8')
-        self.output = np.zeros((frame_shape[0], 2 * frame_shape[1], 4), dtype='uint8')
+        #self.rcmap = np.zeros(frame_shape[:2] + (4,), dtype='uint8')
+        #self.ccmap = np.zeros(frame_shape[:2] + (4,), dtype='uint8')
+        #self.output = np.zeros((frame_shape[0], 2 * frame_shape[1], 4), dtype='uint8')
+        self.output2 = np.zeros((frame_shape[0], 2* frame_shape[1]), dtype=float)
 
     def run(self):
         while True:
-            valid = self.src.next(out=self.frame)
-            if valid is None:
+            self.frame = self.src.next()
+            if self.frame is None:
                 break
             grayscale_image(self.frame, out=self.gray_frame)
             test_and_set(self.peaks_test, self.gray_frame, self.peaks, fn=find_peaks)
@@ -117,9 +118,11 @@ class PreallocSchlierenPipeline(object):
             apply_peaks(self.cdiff, self.peaks, out=self.cpeaks)
             condense(self.rpeaks, out=self.rcond)
             condense(self.cpeaks, out=self.ccond)
-            apply_cmap(self.rcond, out=self.rcmap)
-            apply_cmap(self.ccond, out=self.ccmap)
-            join(self.rcmap, self.ccmap, out=self.output)
-            self.dst.write(self.output)
+            #apply_cmap(self.rcond, out=self.rcmap)
+            #apply_cmap(self.ccond, out=self.ccmap)
+            #join(self.rcmap, self.ccmap, out=self.output)
+            #self.dst.write(self.output)
+            join2(self.rcond,self.ccond,out=self.output2)
+            self.dst.write(self.output2)
 
 DefaultPipeline = PreallocSchlierenPipeline

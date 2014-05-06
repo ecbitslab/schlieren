@@ -14,10 +14,13 @@ import matplotlib.pyplot as plt
 def add_viewer(fn):
     plt.ion()
     plt.figure()
+    plt.pause(.001)
     plt.show()
     def _write(image):
         plt.clf()
-        plt.imshow(image)
+        plt.imshow(image,cmap=plt.cm.bone,vmin=-.03,vmax=.03)
+        plt.colorbar()
+        plt.pause(.0001)
         plt.draw()
         return fn(image)
     return _write

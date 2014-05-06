@@ -50,7 +50,7 @@ class CvFrameSrc(FrameSrc):
     def get_frame_shape(self):
         return tuple([self.cap.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT),
                       self.cap.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH),
-                      self.cap.get(cv2.cv.CV_CAP_PROP_FRAME_DEPTH),
+                      8#self.cap.get(cv2.cv.CV_CAP_PROP_FRAME_DEPTH),
                       ])
 
 
@@ -121,7 +121,7 @@ class CounterSnk(FrameSnk):
 
     def write(self, frame):
         if self.t0 is None:
-            self.t0 = time.time()
+            self.t0 = time.time() - .1
         if frame is None:
             return
         self.count += 1
