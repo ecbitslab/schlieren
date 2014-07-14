@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.ndimage as nd
 import matplotlib.cm as cm
+import matplotlib as plt
 import cv2
 
 TOTAL_KERNEL = np.array([(1, 1, 1), (1, 1, 1), (1, 1, 1)], dtype=float)
@@ -55,14 +56,16 @@ def subtract(x, y, out=None):
     return np.subtract(x, y, out=out)
 
 
-def apply_cmap(image, cmap=cm.jet, out=None):
-    result = cmap(image, bytes=True)
+def apply_cmap(image, cmap=cm.bone, out=None):
+    cmap = cm.ScalarMappable(norm=plt.colors.Normalize(vmin=-.3, vmax=.3), cmap=cmap)
+    result = cmap.to_rgba(image, bytes=True)
     if out is None:
         return result
     out[:] = result
     return out
 
 def join2(image1, image2, out=None):
+    # Part of a inelegant hack
     if out is None:
         return np.hstack([image1, image2])
     else:

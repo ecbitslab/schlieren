@@ -21,7 +21,7 @@ requires = ['numpy',
             'decorator',
             ]
 
-links = ['https://github.com/brianthelion/sharedmem-numpy/zipball/master#egg=npshm']
+links = ['https://github.com/sturlamolden/sharedmem-numpy/zipball/master#egg=npshm']
 
 try:
     import cv2
@@ -40,7 +40,7 @@ setup(name='schlieren',
       url='',
       keywords='',
       packages=find_packages(),
-      scripts=['bin/schlieren-cmd'],
+      scripts=['bin/schlieren-cmd.py'],
       dependency_links=links,
       include_package_data=True,
       zip_safe=True,

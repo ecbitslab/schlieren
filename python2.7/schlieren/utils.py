@@ -41,6 +41,9 @@ class CvFrameSrc(FrameSrc):
 
     def __init__(self, token):
         self.cap = cv2.VideoCapture(token)
+        # Making sure the Thorlab cameras have the right size
+        cap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 1024)
+        cap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 1280)
         assert self.cap.isOpened(), "Failed to open {}".format(token)
 
     def next(self):

@@ -1,0 +1,51 @@
+#! /usr/bin/env python
+
+import logging
+LOG = logging.getLogger(__name__)
+
+import argparse
+import schlieren.serial as ss
+import schlieren.parallel as sp
+import schlieren.utils
+import profilehooks
+
+import matplotlib.pyplot as plt
+
+def add_viewer(fn):
+    plt.ion()
+    plt.figure()
+    plt.pause(.001) # Crashes without this. Do not remove.
+    plt.show()
+    def _write(image):
+        plt.clf()
+        plt.imshow(image)
+        plt.colorbar()
+        plt.pause(.0001) # Crashes without this. Do not remove.
+        plt.draw()
+        return fn(image)
+    return _write
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('frame_src', type=schlieren.utils.src_from_path)
+    parser.add_argument('-p', '--profile', default='')
+    parser.add_argument('-v', '--view', default=False, action='store_true')
+    parser.add_argument('-m', '--mproc', default=False, action='store_true')
+    parser.add_argument('-s', '--frame-snk', default=schlieren.utils.CounterSnk(), type=schlieren.utils.snk_from_path)
+    ns = parser.parse_args()
+
+    if ns.view:
+        ns.frame_snk.write = add_viewer(ns.frame_snk.write)
+
+    if ns.mproc:
+        pl = sp.DefaultPipeline(ns.frame_src, ns.frame_snk)
+    else:
+        pl = ss.DefaultPipeline(ns.frame_src, ns.frame_snk)
+
+    if len(ns.profile) > 0:
+        pl.run = profilehooks.profile(pl.run, filename=ns.profile)
+    
+    pl.run()
+
+if __name__ == '__main__':
+    main()
