@@ -2,6 +2,7 @@ import logging
 LOG = logging.getLogger(__name__)
 
 import numpy as np
+import matplotlib.cm as cm
 
 from .rwstate import RWStateLockedData
 from .lib import *
@@ -37,7 +38,7 @@ class SchlierenPipeline(object):
             cpeaks = apply_peaks(cdiff, first_peaks)
             rcond = condense(rpeaks)
             ccond = condense(cpeaks)
-            rcmap = apply_cmap(rcond)
+            rcmap = apply_cmap(rcond,cmap=cm.bone,vmin=-.3,vmax=.3)
             ccmap = apply_cmap(ccond)
             output = join(rcmap, ccmap)
             self.dst.write(output)

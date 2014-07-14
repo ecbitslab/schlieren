@@ -16,12 +16,12 @@ requires = ['numpy',
             'matplotlib',
             'profilehooks',
             'nose',
-            'npshm',
+            #'npshm',
             'cython',
             'decorator',
             ]
 
-links = ['https://github.com/sturlamolden/sharedmem-numpy/zipball/master#egg=npshm']
+#links = ['https://github.com/sturlamolden/sharedmem-numpy/zipball/master#egg=npshm']
 
 try:
     import cv2
@@ -41,7 +41,7 @@ setup(name='schlieren',
       keywords='',
       packages=find_packages(),
       scripts=['bin/schlieren-cmd.py'],
-      dependency_links=links,
+      dependency_links=[],#links,
       include_package_data=True,
       zip_safe=True,
       test_suite='nose.collector',

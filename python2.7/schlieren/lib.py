@@ -56,8 +56,8 @@ def subtract(x, y, out=None):
     return np.subtract(x, y, out=out)
 
 
-def apply_cmap(image, cmap=cm.bone, out=None):
-    cmap = cm.ScalarMappable(norm=plt.colors.Normalize(vmin=-.3, vmax=.3), cmap=cmap)
+def apply_cmap(image, cmap=cm.bone, out=None, vmin=-.3, vmax=.3):
+    cmap = cm.ScalarMappable(norm=plt.colors.Normalize(vmin, vmax), cmap=cmap)
     result = cmap.to_rgba(image, bytes=True)
     if out is None:
         return result
