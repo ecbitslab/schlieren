@@ -40,7 +40,6 @@ def apply_peaks(image, mask, out=None):
         out[~mask] = 0
         return out
 
-
 def condense(image, size=(10, 10), out=None):
     return nd.maximum_filter(image, size=size, output=out)
 
@@ -55,8 +54,8 @@ def subtract(x, y, out=None):
     return np.subtract(x, y, out=out)
 
 
-def apply_cmap(image, cmap=cm.jet, out=None):
-    result = cm.jet(image, bytes=True)
+def apply_cmap(image, cmap, out=None):
+    result = cmap(image, bytes=True)
     if out is None:
         return result
     out[:] = result

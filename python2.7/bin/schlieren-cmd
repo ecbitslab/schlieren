@@ -10,6 +10,9 @@ import schlieren.utils
 import profilehooks
 
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+
+MAPS = [m for m in cm.datad if not m.endswith("_r")]
 
 def add_viewer(fn):
     plt.ion()
@@ -29,15 +32,18 @@ def main():
     parser.add_argument('-v', '--view', default=False, action='store_true')
     parser.add_argument('-m', '--mproc', default=False, action='store_true')
     parser.add_argument('-s', '--frame-snk', default=schlieren.utils.CounterSnk(), type=schlieren.utils.snk_from_path)
+    parser.add_argument('-c', '--cmap', default='jet', type=cm.get_cmap,
+                        help='AVAILABLE MAPS: ' + ' '.join(sorted(MAPS)))
     ns = parser.parse_args()
 
     if ns.view:
         ns.frame_snk.write = add_viewer(ns.frame_snk.write)
 
+    PipelineCls = ss.DefaultPipeline
     if ns.mproc:
-        pl = sp.DefaultPipeline(ns.frame_src, ns.frame_snk)
-    else:
-        pl = ss.DefaultPipeline(ns.frame_src, ns.frame_snk)
+        PipelineCls = sp.DefaultPipeline
+
+    pl = PipelineCls(ns.frame_src, ns.frame_snk, ns.cmap)
 
     if len(ns.profile) > 0:
         pl.run = profilehooks.profile(pl.run, filename=ns.profile)

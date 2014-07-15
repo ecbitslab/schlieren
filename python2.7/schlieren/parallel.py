@@ -24,9 +24,10 @@ def locked_test_and_set(test, src, out=None, fn=None):
 
 class SharedmemSchlierenPipeline(object):
 
-    def __init__(self, src, dst):
+    def __init__(self, src, dst, cmap):
         self.src = src
         self.dst = dst
+        self.cmap = cmap
 
         self.peaks_test = mp.Value('b', False)
         self.rcent0_test = mp.Value('b', False)
@@ -144,9 +145,11 @@ class SharedmemSchlierenPipeline(object):
                          out=self.ccond)  # 22 fps
         self.make_worker(apply_cmap,
                          self.rcond,
+                         self.cmap,
                          out=self.rcmap)  # 35 fps
         self.make_worker(apply_cmap,
                          self.ccond,
+                         self.cmap,
                          out=self.ccmap)  # 35 fps
         self.make_worker(join,
                          self.rcmap,

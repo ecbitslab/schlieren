@@ -9,9 +9,10 @@ from .lib import *
 
 class SchlierenPipeline(object):
 
-    def __init__(self, src, dst):
+    def __init__(self, src, dst, cmap):
         self.src = src
         self.dst = dst
+        self.cmap = cmap
 
     def run(self):
         first_peaks = None
@@ -37,8 +38,8 @@ class SchlierenPipeline(object):
             cpeaks = apply_peaks(cdiff, first_peaks)
             rcond = condense(rpeaks)
             ccond = condense(cpeaks)
-            rcmap = apply_cmap(rcond)
-            ccmap = apply_cmap(ccond)
+            rcmap = apply_cmap(rcond, self.cmap)
+            ccmap = apply_cmap(ccond, self.cmap)
             output = join(rcmap, ccmap)
             self.dst.write(output)
 
@@ -68,9 +69,10 @@ class SharedValue(object):
 
 class PreallocSchlierenPipeline(object):
 
-    def __init__(self, src, dst):
+    def __init__(self, src, dst, cmap):
         self.src = src
         self.dst = dst
+        self.cmap = cmap
 
         self.peaks_test = SharedValue(False)
         self.rcent0_test = SharedValue(False)
@@ -117,8 +119,8 @@ class PreallocSchlierenPipeline(object):
             apply_peaks(self.cdiff, self.peaks, out=self.cpeaks)
             condense(self.rpeaks, out=self.rcond)
             condense(self.cpeaks, out=self.ccond)
-            apply_cmap(self.rcond, out=self.rcmap)
-            apply_cmap(self.ccond, out=self.ccmap)
+            apply_cmap(self.rcond, self.cmap, out=self.rcmap)
+            apply_cmap(self.ccond, self.cmap, out=self.ccmap)
             join(self.rcmap, self.ccmap, out=self.output)
             self.dst.write(self.output)
 
