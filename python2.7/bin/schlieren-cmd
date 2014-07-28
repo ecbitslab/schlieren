@@ -11,8 +11,9 @@ import profilehooks
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib.colors as colors
 
-MAPS = [m for m in cm.datad if not m.endswith("_r")]
+MAPS = [m for m in cm.datad if not m.endswith('_r')]
 
 def add_viewer(fn):
     plt.ion()
@@ -34,6 +35,8 @@ def main():
     parser.add_argument('-s', '--frame-snk', default=schlieren.utils.CounterSnk(), type=schlieren.utils.snk_from_path)
     parser.add_argument('-c', '--cmap', default='jet', type=cm.get_cmap,
                         help='AVAILABLE MAPS: ' + ' '.join(sorted(MAPS)))
+    parser.add_argument('--vmin', default=-0.3, type=float)
+    parser.add_argument('--vmax', default=0.3, type=float)
     ns = parser.parse_args()
 
     if ns.view:
@@ -42,6 +45,12 @@ def main():
     PipelineCls = ss.DefaultPipeline
     if ns.mproc:
         PipelineCls = sp.DefaultPipeline
+    
+    if ns.vmin >= ns.vmax:
+        _error_msg = "--vmin ({}) must be strictly less than --vmax ({})!".format(ns.vmin, ns.vmax)
+        parser.error(_error_msg)
+
+    ns.cmap = cm.ScalarMappable(norm=colors.Normalize(ns.vmin, ns.vmax), cmap=ns.cmap).to_rgba
 
     pl = PipelineCls(ns.frame_src, ns.frame_snk, ns.cmap)
 
